@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>Micro.EventAggregator</id>
+		<version>1.0.0</version>
+		<authors>Rob Eisenberg</authors>
+		<description>A small, simple event aggregator implementation for .NET, Silverlight and WP7.</description>
+		<language>en-US</language>
+		<licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+		<projectUrl>https://github.com/EisenbergEffect/Micro.EventAggregator</projectUrl>
+		<iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
+		<tags>Silverlight WPF WP7 SL4 SL Phone EA PubSub EventAggregator Messaging Messenger Publish Subscribe Event</tags>
+	</metadata>
+</package>
