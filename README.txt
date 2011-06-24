@@ -1,0 +1,1 @@
+A small, simple event aggregator implementation for .NET, Silverlight and WP7.
