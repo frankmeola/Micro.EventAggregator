@@ -95,7 +95,7 @@
         ///   Publishes a message.
         /// </summary>
         /// <param name = "message">The message instance.</param>
-        /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication. The default uses the UI thread marshaller.</param>
+        /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
         public void Publish(object message, Action<Action> marshal) {
             Handler[] toNotify;
             lock(handlers)
