@@ -26,6 +26,14 @@
     /// </summary>
     public interface IEventAggregator {
         /// <summary>
+        ///   Gets or sets the default publication thread marshaller.
+        /// </summary>
+        /// <value>
+        ///   The default publication thread marshaller.
+        /// </value>
+        Action<Action> PublicationThreadMarshaller { get; set; }
+
+        /// <summary>
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
         /// </summary>
         /// <param name = "instance">The instance to subscribe for event publication.</param>
@@ -41,29 +49,36 @@
         ///   Publishes a message.
         /// </summary>
         /// <param name = "message">The message instance.</param>
-        /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
-        void Publish(object message, Action<Action> marshal);
-    }
+        /// <remarks>
+        ///   Uses the default thread marshaller during publication.
+        /// </remarks>
+        void Publish(object message);
 
-    /// <summary>
-    ///   Extension methods for <see cref = "IEventAggregator" />.
-    /// </summary>
-    public static class EventAggregatorExtensions {
         /// <summary>
         ///   Publishes a message.
         /// </summary>
-        /// <param name = "aggregator">The event aggregator.</param>
         /// <param name = "message">The message instance.</param>
-        public static void Publish(this IEventAggregator aggregator, object message) {
-            aggregator.Publish(message, null);
-        }
+        /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
+        void Publish(object message, Action<Action> marshal);
     }
 
     /// <summary>
     ///   Enables loosely-coupled publication of and subscription to events.
     /// </summary>
     public class EventAggregator : IEventAggregator {
+        Action<Action> publicationThreadMarshaller = action => action();
         readonly List<Handler> handlers = new List<Handler>();
+
+        /// <summary>
+        ///   Gets or sets the default publication thread marshaller.
+        /// </summary>
+        /// <value>
+        ///   The default publication thread marshaller.
+        /// </value>
+        public Action<Action> PublicationThreadMarshaller {
+            get { return publicationThreadMarshaller; }
+            set { publicationThreadMarshaller = value; }
+        }
 
         /// <summary>
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
@@ -95,14 +110,22 @@
         ///   Publishes a message.
         /// </summary>
         /// <param name = "message">The message instance.</param>
+        /// <remarks>
+        ///   Does not marshall the the publication to any special thread by default.
+        /// </remarks>
+        public virtual void Publish(object message) {
+            Publish(message, publicationThreadMarshaller);
+        }
+
+        /// <summary>
+        ///   Publishes a message.
+        /// </summary>
+        /// <param name = "message">The message instance.</param>
         /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
         public virtual void Publish(object message, Action<Action> marshal) {
             Handler[] toNotify;
             lock(handlers)
                 toNotify = handlers.ToArray();
-
-            if(marshal == null)
-                marshal = action => action();
 
             marshal(() => {
                 var messageType = message.GetType();
