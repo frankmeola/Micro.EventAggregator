@@ -8,7 +8,7 @@
     <ProjectGuid>{E04DB2FF-4725-4A23-9754-676F9AFB0404}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Micro</RootNamespace>
+    <RootNamespace>Caliburn.Micro</RootNamespace>
     <AssemblyName>Micro.EventAggregator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

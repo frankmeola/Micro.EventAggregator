@@ -1,4 +1,4 @@
-﻿namespace Micro {
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -66,8 +66,20 @@
     ///   Enables loosely-coupled publication of and subscription to events.
     /// </summary>
     public class EventAggregator : IEventAggregator {
-        Action<Action> publicationThreadMarshaller = action => action();
+        /// <summary>
+        /// The default thread marshaller used for publication;
+        /// </summary>
+        public static System.Action<System.Action> DefaultPublicationThreadMarshaller = action => action();
+
         readonly List<Handler> handlers = new List<Handler>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventAggregator"/> class.
+        /// </summary>
+        public EventAggregator()
+        {
+            PublicationThreadMarshaller = DefaultPublicationThreadMarshaller;
+        }
 
         /// <summary>
         ///   Gets or sets the default publication thread marshaller.
@@ -75,10 +87,7 @@
         /// <value>
         ///   The default publication thread marshaller.
         /// </value>
-        public Action<Action> PublicationThreadMarshaller {
-            get { return publicationThreadMarshaller; }
-            set { publicationThreadMarshaller = value; }
-        }
+        public Action<System.Action> PublicationThreadMarshaller { get; set; }
 
         /// <summary>
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
@@ -114,7 +123,7 @@
         ///   Does not marshall the the publication to any special thread by default.
         /// </remarks>
         public virtual void Publish(object message) {
-            Publish(message, publicationThreadMarshaller);
+            Publish(message, PublicationThreadMarshaller);
         }
 
         /// <summary>
